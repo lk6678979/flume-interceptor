@@ -1,4 +1,5 @@
-# flume拦截器-1.9.0（其他版本也一样）
+# flume拦截器-1.9.0
+* 其他版本只需要修改pom中的版本一样
 ## 1. 添加Pom依赖
 ```xml
     <dependencies>
@@ -14,7 +15,7 @@
         </dependency>
     </dependencies>
 ```
-## 2. 编写拦截器类，实现`org.apache.flume.interceptor.Interceptor`接口(这里已处理kafka source数据为例
+## 2. 编写拦截器类，实现`org.apache.flume.interceptor.Interceptor`接口(这里已处理kafka source数据为例）
 ```java
 package com.sziov.flumeinterceptor;
 
@@ -107,3 +108,11 @@ public class CdDataFormat implements Interceptor {
 }
 
 ```
+## 3. 在flume配置文件中添加拦截器
+```properties
+#-------------------source1:interceptor------------
+x9ec.sources.source1.interceptors = i2
+x9ec.sources.source1.interceptors.i2.type = com.sziov.flumeinterceptor.CdDataFormat$Builder
+x9ec.sources.source1.interceptors.i2.param=parameter
+```
+* 说明：x9ec.sources.source1.interceptors.i2.param=parameter配置中等号前的param必须要代码中` context.getString("param")`中getString的参数保持一致
