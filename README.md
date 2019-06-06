@@ -28,10 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
 
-
 public class MyInterceptor implements Interceptor {
     //打印日志，便于测试方法的执行顺序
-    private static final Logger logger = LoggerFactory.getLogger(CdDataFormat.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyInterceptor.class);
 
     //自定义拦截器参数，用来接收自定义拦截器flume配置参数
     private static String param = "";
@@ -49,7 +48,6 @@ public class MyInterceptor implements Interceptor {
         String line = new String(event.getBody(), Charsets.UTF_8);
         logger.info("Kafka数据，header：【{}】，数据：【{}】", event.getHeaders(), line);
         Gson gson = new Gson();
-        LinkedHashMap<String, Object> lineInfo = gson.fromJson(line, LinkedHashMap.class);
         //解析kafka读取到的数据
         LinkedHashMap<String, Object> lineInfo = gson.fromJson(line, LinkedHashMap.class);
         //处理后的新数据
@@ -88,7 +86,7 @@ public class MyInterceptor implements Interceptor {
         @Override
         public Interceptor build() {
             logger.info("----------build方法执行");
-            return new CdDataFormat();
+            return new MyInterceptor();
 
         }
 
@@ -112,11 +110,11 @@ public class MyInterceptor implements Interceptor {
 ## 3. 在flume配置文件中添加拦截器
 ```properties
 #-------------------source1:interceptor------------
-x9ec.sources.source1.interceptors = i2
-x9ec.sources.source1.interceptors.i2.type = com.owp.flumeinterceptor.MyInterceptor$Builder
-x9ec.sources.source1.interceptors.i2.param=parameter
+agent.sources.source1.interceptors = i2
+agent.sources.source1.interceptors.i2.type = com.owp.flumeinterceptor.MyInterceptor$Builder
+agent.sources.source1.interceptors.i2.param=parameter
 ```
-* 说明：x9ec.sources.source1.interceptors.i2.param=parameter配置中等号前的param必须要代码中` context.getString("param")`中getString的参数保持一致
+* 说明：agent.sources.source1.interceptors.i2.param=parameter配置中等号前的param必须要代码中` context.getString("param")`中getString的参数保持一致
 
 ## 4. 打成全量jar放到flume的jar中(打包方式请百度ideal打全量jar）
 ## 5. 启动fulme查看结果
