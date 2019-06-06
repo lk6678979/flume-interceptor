@@ -28,10 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.*;
 
-
 public class MyInterceptor implements Interceptor {
     //打印日志，便于测试方法的执行顺序
-    private static final Logger logger = LoggerFactory.getLogger(CdDataFormat.class);
+    private static final Logger logger = LoggerFactory.getLogger(MyInterceptor.class);
 
     //自定义拦截器参数，用来接收自定义拦截器flume配置参数
     private static String param = "";
@@ -49,7 +48,6 @@ public class MyInterceptor implements Interceptor {
         String line = new String(event.getBody(), Charsets.UTF_8);
         logger.info("Kafka数据，header：【{}】，数据：【{}】", event.getHeaders(), line);
         Gson gson = new Gson();
-        LinkedHashMap<String, Object> lineInfo = gson.fromJson(line, LinkedHashMap.class);
         //解析kafka读取到的数据
         LinkedHashMap<String, Object> lineInfo = gson.fromJson(line, LinkedHashMap.class);
         //处理后的新数据
@@ -88,7 +86,7 @@ public class MyInterceptor implements Interceptor {
         @Override
         public Interceptor build() {
             logger.info("----------build方法执行");
-            return new CdDataFormat();
+            return new MyInterceptor();
 
         }
 
