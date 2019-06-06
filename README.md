@@ -17,7 +17,7 @@
 ```
 ## 2. 编写拦截器类，实现`org.apache.flume.interceptor.Interceptor`接口(这里已处理kafka source数据为例）
 ```java
-package com.sziov.flumeinterceptor;
+package com.owp.flumeinterceptor;
 
 import com.google.gson.Gson;
 import org.apache.commons.codec.Charsets;
@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
 import java.util.*;
 
 
-public class CdDataFormat implements Interceptor {
+public class MyInterceptor implements Interceptor {
     //打印日志，便于测试方法的执行顺序
     private static final Logger logger = LoggerFactory.getLogger(CdDataFormat.class);
 
@@ -49,6 +49,7 @@ public class CdDataFormat implements Interceptor {
         String line = new String(event.getBody(), Charsets.UTF_8);
         logger.info("Kafka数据，header：【{}】，数据：【{}】", event.getHeaders(), line);
         Gson gson = new Gson();
+        LinkedHashMap<String, Object> lineInfo = gson.fromJson(line, LinkedHashMap.class);
         //解析kafka读取到的数据
         LinkedHashMap<String, Object> lineInfo = gson.fromJson(line, LinkedHashMap.class);
         //处理后的新数据
@@ -112,7 +113,7 @@ public class CdDataFormat implements Interceptor {
 ```properties
 #-------------------source1:interceptor------------
 x9ec.sources.source1.interceptors = i2
-x9ec.sources.source1.interceptors.i2.type = com.sziov.flumeinterceptor.CdDataFormat$Builder
+x9ec.sources.source1.interceptors.i2.type = com.owp.flumeinterceptor.MyInterceptor$Builder
 x9ec.sources.source1.interceptors.i2.param=parameter
 ```
 * 说明：x9ec.sources.source1.interceptors.i2.param=parameter配置中等号前的param必须要代码中` context.getString("param")`中getString的参数保持一致
