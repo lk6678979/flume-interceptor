@@ -117,3 +117,9 @@ x9ec.sources.source1.interceptors.i2.type = com.owp.flumeinterceptor.MyIntercept
 x9ec.sources.source1.interceptors.i2.param=parameter
 ```
 * 说明：x9ec.sources.source1.interceptors.i2.param=parameter配置中等号前的param必须要代码中` context.getString("param")`中getString的参数保持一致
+
+## 4. 打成全量jar放到flume的jar中(打包方式请百度ideal打全量jar）
+## 5. 启动fulme查看结果
+```shell
+/home/flume/apache-flume-1.9.0-bin/bin/flume-ng agent  --conf conf --conf-file /home/flume/apache-flume-1.9.0-bin/conf/flume-conf-kafkad.properties  --name x9ec -Dflume.root.logger=INFO,console > /home/flume/logs/x9ed.log 2>&1 &
+```
